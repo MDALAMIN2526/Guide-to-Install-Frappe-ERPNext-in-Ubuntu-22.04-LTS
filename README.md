@@ -117,14 +117,16 @@ Now press (Ctrl-X) to exit
     
 ### STEP 13 initilise the frappe bench & install frappe latest version 
 
-    bench init frappe-bench 
+    bench init --frappe-branch version-13 frappe-bench 
+    
+    bench init --frappe-branch version-14 frappe-bench 
     
     cd frappe-bench/
     bench start
     
 ### STEP 14 create a site in frappe bench 
     
-    bench new-site dcode.com
+    bench new-site cpm.com
     
     bench use dcode.com
 
