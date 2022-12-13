@@ -143,7 +143,7 @@ Now press (Ctrl-X) to exit
     bench --site dcode.com install-app erpnext
     
     bench start
-### SETUP PRODUCTION SERVER 
+### STEP 16 SETUP PRODUCTION SERVER 
     Enable scheduler service 
 
     bench --site site1.local enable-scheduler 
