@@ -118,7 +118,7 @@ Now press (Ctrl-X) to exit
 ### STEP 13 initilise the frappe bench & install frappe latest version 
 
     bench init --frappe-branch version-13 frappe-bench 
-    
+
     bench init --frappe-branch version-14 frappe-bench 
     
     cd frappe-bench/
@@ -143,5 +143,33 @@ Now press (Ctrl-X) to exit
     bench --site dcode.com install-app erpnext
     
     bench start
+### SETUP PRODUCTION SERVER 
+    Enable scheduler service 
+
+    bench --site site1.local enable-scheduler 
+    
+
+    Disable maintenance mode 
+
+    bench --site site1.local set-maintenance-mode off 
+    
+
+    Setup production config 
+
+    sudo bench setup production [frappe-user] 
+    
+
+    Setup NGINX web server 
+
+    bench setup nginx 
+    
+
+    Final server setup 
+
+    sudo supervisorctl restart all 
+    sudo bench setup production [frappe-user] 
+    
+
+    When prompted to save new/existing config files, hit “Y” 
 
     
