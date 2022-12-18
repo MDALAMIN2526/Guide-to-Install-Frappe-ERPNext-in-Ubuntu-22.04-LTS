@@ -107,15 +107,19 @@ Now press (Ctrl-X) to exit
 ### STEP 11 install wkhtmltopdf
 
     sudo apt-get install xvfb libfontconfig wkhtmltopdf
-    
 
-### STEP 12 install frappe-bench
+### STEP  12 Create a new user
+    sudo adduser cpmerp
+    sudo usermod -aG sudo cpmerp
+    su - cpmerp
+
+### STEP 13 install frappe-bench
 
     sudo -H pip3 install frappe-bench
     
     bench --version
     
-### STEP 13 initilise the frappe bench & install frappe latest version 
+### STEP 14 initilise the frappe bench & install frappe latest version 
 
     bench init --frappe-branch version-13 frappe-bench 
 
@@ -124,13 +128,13 @@ Now press (Ctrl-X) to exit
     cd frappe-bench/
     bench start
     
-### STEP 14 create a site in frappe bench 
+### STEP 15 create a site in frappe bench 
     
     bench new-site cpm.com
     
-    bench use dcode.com
+    bench use cpm.com
 
-### STEP 15 install ERPNext latest version in bench & site
+### STEP 16 install ERPNext latest version in bench & site
 
     bench get-app erpnext --branch version-13
     ###OR
@@ -140,23 +144,23 @@ Now press (Ctrl-X) to exit
      ###OR
     bench get-app https://github.com/frappe/erpnext --branch version-14
 
-    bench --site dcode.com install-app erpnext
+    bench --site cpm.com install-app erpnext
     
     bench start
-### STEP 16 SETUP PRODUCTION SERVER 
+### STEP 17 SETUP PRODUCTION SERVER 
     Enable scheduler service 
 
-    bench --site site1.local enable-scheduler 
+    bench --site cpm.com enable-scheduler 
     
 
     Disable maintenance mode 
 
-    bench --site site1.local set-maintenance-mode off 
+    bench --site cpm.com set-maintenance-mode off 
     
 
     Setup production config 
 
-    sudo bench setup production [frappe-user] 
+    sudo bench setup production cpmerp 
     
 
     Setup NGINX web server 
@@ -167,7 +171,7 @@ Now press (Ctrl-X) to exit
     Final server setup 
 
     sudo supervisorctl restart all 
-    sudo bench setup production [frappe-user] 
+    sudo bench setup production cpmerp 
     
 
     When prompted to save new/existing config files, hit “Y” 
