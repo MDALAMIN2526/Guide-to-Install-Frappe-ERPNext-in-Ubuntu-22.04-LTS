@@ -112,6 +112,7 @@ Now press (Ctrl-X) to exit
     sudo adduser cpmerp
     sudo usermod -aG sudo cpmerp
     su - cpmerp
+    chmod -R o+rx /home/cpmerp
 
 ### STEP 13 install frappe-bench
 
@@ -148,32 +149,32 @@ Now press (Ctrl-X) to exit
     
     bench start
 ### STEP 17 SETUP PRODUCTION SERVER 
-    Enable scheduler service 
+## Enable scheduler service 
 
     bench --site cpm.com enable-scheduler 
     
 
-    Disable maintenance mode 
+## Disable maintenance mode 
 
     bench --site cpm.com set-maintenance-mode off 
     
 
-    Setup production config 
+## Setup production config 
 
     sudo bench setup production cpmerp 
     
 
-    Setup NGINX web server 
+## Setup NGINX web server 
 
     bench setup nginx 
     
 
-    Final server setup 
+## Final server setup 
 
     sudo supervisorctl restart all 
     sudo bench setup production cpmerp 
     
 
-    When prompted to save new/existing config files, hit “Y” 
+# When prompted to save new/existing config files, hit “Y” 
 
     
