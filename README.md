@@ -144,9 +144,11 @@ Now press (Ctrl-X) to exit
     bench get-app https://github.com/frappe/erpnext --branch version-13
      ###OR
     bench get-app https://github.com/frappe/erpnext --branch version-14
-
+    bench get-app payments
+    bench get-app hrms
     bench --site cpm.com install-app erpnext
-    
+    bench --site cpm.com install-app payments
+    bench --site cpm.com install-app hrms
     bench start
 ### STEP 17 SETUP PRODUCTION SERVER 
 ## Enable scheduler service 
