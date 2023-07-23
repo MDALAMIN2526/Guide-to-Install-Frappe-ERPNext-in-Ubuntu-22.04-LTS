@@ -93,10 +93,16 @@ Now press (Ctrl-X) to exit
 
 ### STEP 9 install Node.js 14.X package
 
+    sudo apt-get remove nodejs
+    sudo apt-get remove npm
+    sudo apt-get update
+    which node
+
     sudo apt install curl 
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     source ~/.profile
     nvm install 14.15.0   -y
+    which node
 
 ### STEP 10  install Yarn
 
