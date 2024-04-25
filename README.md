@@ -17,6 +17,7 @@ A complete Guide to Install Frappe Bench in Ubuntu 22.04 LTS and install Frappe/
 
 ### STEP 1 Install git
     sudo apt-get install git -y
+    sudo apt-get install cron
 
 ### STEP 2 install python-dev
 
@@ -99,9 +100,11 @@ Now press (Ctrl-X) to exit
     which node
 
     sudo apt install curl 
-    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-    source ~/.profile
-    nvm install 14.15.0   -y
+    sudo apt-get install curl
+    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    nvm use 18
+    nvm alias default 18
     which node
 
 ### STEP 10  install Yarn
@@ -131,6 +134,8 @@ Now press (Ctrl-X) to exit
     bench init --frappe-branch version-13 frappe-bench 
 
     bench init --frappe-branch version-14 frappe-bench 
+
+    bench init --frappe-branch version-15 frappe-bench
     
     cd frappe-bench/
     bench start
@@ -146,15 +151,21 @@ Now press (Ctrl-X) to exit
     bench get-app erpnext --branch version-13
     ###OR
     bench get-app erpnext --branch version-14
+    bench get-app hrms --branch version-14
+    ###OR
+    bench get-app erpnext --branch version-15
+    bench get-app hrms --branch version-15
     ###OR
     bench get-app https://github.com/frappe/erpnext --branch version-13
-     ###OR
+    ###OR
     bench get-app https://github.com/frappe/erpnext --branch version-14
-    bench get-app payments
-    bench get-app hrms --branch version-14
+    ###OR
+    bench get-app https://github.com/frappe/erpnext --branch version-15
+    
     bench --site cpm.com install-app erpnext
-    bench --site cpm.com install-app payments
+    
     bench --site cpm.com install-app hrms
+    
     bench start
 ### STEP 17 SETUP PRODUCTION SERVER 
 ## Enable scheduler service 
