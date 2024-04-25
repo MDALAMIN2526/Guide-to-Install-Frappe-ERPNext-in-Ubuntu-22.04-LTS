@@ -1,4 +1,4 @@
-# Guide to Install Frappe & ERPNext- v13 & v14 in Ubuntu-22.04-LTS
+# Guide to Install Frappe & ERPNext- v13 & v14 & v15 in Ubuntu-22.04-LTS
 A complete Guide to Install Frappe Bench in Ubuntu 22.04 LTS and install Frappe/ERPNext Application
 
 ### Pre-requisites 
