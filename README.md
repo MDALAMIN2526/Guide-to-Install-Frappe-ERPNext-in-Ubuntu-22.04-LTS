@@ -101,7 +101,7 @@ Now press (Ctrl-X) to exit
 
     sudo apt install curl 
     sudo apt-get install curl
-    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    curl -sL https://deb.nodesource.com/setup_20.9.0 | sudo -E bash -
     sudo apt-get install -y nodejs
     nvm use 18
     nvm alias default 18
