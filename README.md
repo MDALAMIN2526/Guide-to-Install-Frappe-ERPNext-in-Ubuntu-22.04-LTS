@@ -18,6 +18,7 @@ A complete Guide to Install Frappe Bench in Ubuntu 22.04 LTS and install Frappe/
 ### STEP 1 Install git
     sudo apt-get install git -y
     sudo apt-get install cron
+    sudo apt install curl
 
 ### STEP 2 install python-dev
 
@@ -100,11 +101,11 @@ Now press (Ctrl-X) to exit
     which node
 
     sudo apt install curl 
-    sudo apt-get install curl
-    curl -sL https://deb.nodesource.com/setup_20.9.0 | sudo -E bash -
-    sudo apt-get install -y nodejs
-    nvm use 18
-    nvm alias default 18
+    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    source ~/.profile
+    nvm install 20.9.0 -y
+    nvm use 20.9.0
+    nvm alias default 20.9.0
     which node
 
 ### STEP 10  install Yarn
