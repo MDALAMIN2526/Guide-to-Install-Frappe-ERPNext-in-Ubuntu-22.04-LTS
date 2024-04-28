@@ -146,6 +146,8 @@ Now press (Ctrl-X) to exit
     bench new-site cpm.com
     
     bench use cpm.com
+    #### Change Site Port 
+          bench set-nginx-port cpm.com 88 
 
 ### STEP 16 install ERPNext latest version in bench & site
 
