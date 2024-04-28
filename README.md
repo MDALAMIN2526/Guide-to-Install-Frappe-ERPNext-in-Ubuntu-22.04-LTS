@@ -103,9 +103,9 @@ Now press (Ctrl-X) to exit
     sudo apt install curl 
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     source ~/.profile
-    nvm install 20.9.0 -y
-    nvm use 20.9.0
-    nvm alias default 20.9.0
+    nvm install 18.18.0 -y
+    nvm use 18.18.0
+    nvm alias default 18.18.0
     which node
 
 ### STEP 10  install Yarn
