@@ -197,4 +197,6 @@ Now press (Ctrl-X) to exit
 
 # When prompted to save new/existing config files, hit “Y” 
 
+## Delete a site
+bench drop-site cpm.com
     
