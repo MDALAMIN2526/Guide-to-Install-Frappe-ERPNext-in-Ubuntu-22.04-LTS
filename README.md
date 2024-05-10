@@ -120,14 +120,17 @@ Now press (Ctrl-X) to exit
 
 ### STEP  12 Create a new user
     sudo adduser cpmerp
+
     sudo usermod -aG sudo cpmerp
+
     su - cpmerp
+
     chmod -R o+rx /home/cpmerp
 
 ### STEP 13 install frappe-bench
 
     sudo -H pip3 install frappe-bench
-    
+
     bench --version
     
 ### STEP 14 initilise the frappe bench & install frappe latest version 
@@ -137,17 +140,16 @@ Now press (Ctrl-X) to exit
     bench init --frappe-branch version-14 frappe-bench 
 
     bench init --frappe-branch version-15 frappe-bench
-    
+
     cd frappe-bench/
+
     bench start
     
 ### STEP 15 create a site in frappe bench 
     
     bench new-site cpm.com
-    
+ 
     bench use cpm.com
-    #### Change Site Port 
-          bench set-nginx-port cpm.com 88 
 
 ### STEP 16 install ERPNext latest version in bench & site
 
@@ -164,9 +166,9 @@ Now press (Ctrl-X) to exit
     bench get-app https://github.com/frappe/erpnext --branch version-14
     ###OR
     bench get-app https://github.com/frappe/erpnext --branch version-15
-    
+
     bench --site cpm.com install-app erpnext
-    
+
     bench --site cpm.com install-app hrms
     
     bench start
@@ -194,18 +196,19 @@ Now press (Ctrl-X) to exit
 ## Final server setup 
 
     sudo supervisorctl restart all 
-    sudo bench setup production cpmerp 
 
+    sudo bench setup production cpmerp 
+#### Change Site Port 
+          bench set-nginx-port cpm.com 88 
 ## How to uninstall
 Tip: before uninstalling create a snapshot of your server.
 
 Note: Some custom fields with data may not be completely removed, however this will not affect the performance of the system.
 
-bench --site cpm.com uninstall-app app name
-bench --site cpm.com remove-app app name
-    
+      bench --site cpm.com uninstall-app app name
 
-# When prompted to save new/existing config files, hit “Y” 
+      bench --site cpm.com remove-app app name
+
 
 ## Delete a site
 bench drop-site cpm.com
