@@ -195,6 +195,14 @@ Now press (Ctrl-X) to exit
 
     sudo supervisorctl restart all 
     sudo bench setup production cpmerp 
+
+## How to uninstall
+Tip: before uninstalling create a snapshot of your server.
+
+Note: Some custom fields with data may not be completely removed, however this will not affect the performance of the system.
+
+bench --site cpm.com uninstall-app app name
+bench --site cpm.com remove-app app name
     
 
 # When prompted to save new/existing config files, hit “Y” 
