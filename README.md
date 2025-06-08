@@ -16,9 +16,7 @@ A complete Guide to Install Frappe Bench in Ubuntu 22.04 LTS and install Frappe/
 
 
 ### STEP 1 Install git
-    sudo apt-get install git -y
-    sudo apt-get install cron
-    sudo apt install curl
+    sudo apt-get update && sudo apt-get install -y git cron curl
 
 ### STEP 2 install python-dev
 
