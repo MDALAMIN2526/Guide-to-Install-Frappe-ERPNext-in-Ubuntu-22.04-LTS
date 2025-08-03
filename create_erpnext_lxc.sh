@@ -1,7 +1,5 @@
 #!/bin/bash
-# ERPNext LXC Creator for Proxmox
-# This script creates an LXC container and automatically installs ERPNext
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/MDALAMIN2526/Guide-to-Install-Frappe-ERPNext-in-Ubuntu-22.04-LTS/refs/heads/main/create_erpnext_lxc.sh)"
+# ERPNext LXC Auto-Installer for Proxmox with Automatic Template Handling
 
 # Colors for output
 RED='\033[0;31m'
@@ -20,6 +18,53 @@ if [ "$(id -u)" -ne 0 ]; then
     echo -e "${RED}This script must be run as root${NC}"
     exit 1
 fi
+
+# Function to handle template verification and download
+verify_template() {
+    echo -e "${YELLOW}Checking for Ubuntu 22.04 template...${NC}"
+    pveam update >/dev/null
+    
+    # Look for any Ubuntu 22.04 template
+    TEMPLATE=$(pveam available --section system | grep -i "ubuntu-22" | head -1 | awk '{print $2}')
+    
+    if [ -z "$TEMPLATE" ]; then
+        echo -e "${RED}No Ubuntu 22.04 template found in repositories${NC}"
+        echo -e "${YELLOW}Attempting to download directly...${NC}"
+        
+        TEMPLATE="ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+        TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
+        
+        if [ ! -f "$TEMPLATE_PATH" ]; then
+            wget https://cloud-images.ubuntu.com/releases/22.04/release/$TEMPLATE -P /var/lib/vz/template/cache/
+            if [ $? -ne 0 ]; then
+                echo -e "${RED}Failed to download Ubuntu 22.04 template${NC}"
+                echo "Please manually download a template and try again."
+                echo "Options:"
+                echo "1. pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+                echo "2. Download from: https://cloud-images.ubuntu.com/releases/22.04/release/"
+                exit 1
+            fi
+            echo -e "${GREEN}Template downloaded successfully${NC}"
+        fi
+        echo -e "${YELLOW}Using manually downloaded template${NC}"
+        return
+    fi
+    
+    # Check if template is already downloaded
+    if ! pveam list local | grep -q "$TEMPLATE"; then
+        echo -e "${YELLOW}Downloading $TEMPLATE...${NC}"
+        pveam download local "$TEMPLATE"
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}Failed to download template $TEMPLATE${NC}"
+            exit 1
+        fi
+    fi
+    
+    echo -e "${GREEN}Using template: $TEMPLATE${NC}"
+}
+
+# Verify and handle template
+verify_template
 
 # Get next available CTID
 CTID=$(pvesh get /cluster/nextid)
@@ -108,7 +153,7 @@ esac
 # Summary
 echo ""
 echo "Configuration Summary"
-echo "===================="
+echo "==================="
 echo "Container ID: $CTID"
 echo "Hostname: $HOSTNAME"
 echo "FQDN: $FQDN"
@@ -129,22 +174,43 @@ fi
 
 # Create the container
 echo -e "${YELLOW}Creating LXC container...${NC}"
-pct create $CTID \
-    local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst \
-    --hostname $FQDN \
-    --password "$ROOT_PASS" \
-    --storage local-lvm \
-    --unprivileged 1 \
-    --cores $CORES \
-    --memory $MEMORY \
-    --swap 512 \
-    --ostype ubuntu \
-    --arch amd64 \
-    --net0 name=eth0,bridge=vmbr0,ip=dhcp \
-    --rootfs local-lvm:${DISK_SIZE} \
-    --features nesting=1 \
-    --onboot 1 \
-    --start 1
+if [[ $TEMPLATE == *"http"* ]]; then
+    # Using manually downloaded template
+    pct create $CTID \
+        /var/lib/vz/template/cache/ubuntu-22.04-standard_22.04-1_amd64.tar.zst \
+        --hostname $FQDN \
+        --password "$ROOT_PASS" \
+        --storage local-lvm \
+        --unprivileged 1 \
+        --cores $CORES \
+        --memory $MEMORY \
+        --swap 512 \
+        --ostype ubuntu \
+        --arch amd64 \
+        --net0 name=eth0,bridge=vmbr0,ip=dhcp \
+        --rootfs local-lvm:${DISK_SIZE} \
+        --features nesting=1 \
+        --onboot 1 \
+        --start 1
+else
+    # Using template from Proxmox repository
+    pct create $CTID \
+        local:vztmpl/$TEMPLATE \
+        --hostname $FQDN \
+        --password "$ROOT_PASS" \
+        --storage local-lvm \
+        --unprivileged 1 \
+        --cores $CORES \
+        --memory $MEMORY \
+        --swap 512 \
+        --ostype ubuntu \
+        --arch amd64 \
+        --net0 name=eth0,bridge=vmbr0,ip=dhcp \
+        --rootfs local-lvm:${DISK_SIZE} \
+        --features nesting=1 \
+        --onboot 1 \
+        --start 1
+fi
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}Failed to create container${NC}"
@@ -153,7 +219,7 @@ fi
 
 # Wait for container to start
 echo -e "${YELLOW}Waiting for container to start...${NC}"
-sleep 10
+sleep 15
 
 # Prepare installation script to be executed inside container
 INSTALL_SCRIPT="/tmp/install_erpnext_$CTID.sh"
@@ -184,10 +250,10 @@ sudo -u \$ERP_USER bash -c 'cat > /home/\$USER/install_erpnext.sh <<"EOSCRIPT"
 #!/bin/bash
 
 # Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-NC='\033[0m'
+RED='\\033[0;31m'
+GREEN='\\033[0;32m'
+YELLOW='\\033[0;33m'
+NC='\\033[0m'
 
 # Update system
 echo -e "\${YELLOW}Updating system...\${NC}"
@@ -318,7 +384,7 @@ echo "cd ~/frappe-bench && bench start"
 EOSCRIPT'
 
 # Make the script executable and run it
-sudo -u \$ERP_USER bash -c "chmod +x /home/\$USER/install_erpnext.sh"
+chmod +x /home/\$ERP_USER/install_erpnext.sh
 sudo -u \$ERP_USER bash -c "cd /home/\$USER && ./install_erpnext.sh"
 EOF
 
