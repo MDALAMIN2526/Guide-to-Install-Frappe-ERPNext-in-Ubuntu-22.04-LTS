@@ -1,6 +1,7 @@
 #!/bin/bash
 # ERPNext LXC Creator for Proxmox
 # This script creates an LXC container and automatically installs ERPNext
+# bash -c "$(https://raw.githubusercontent.com/MDALAMIN2526/Guide-to-Install-Frappe-ERPNext-in-Ubuntu-22.04-LTS/refs/heads/main/create_erpnext_lxc.sh)"
 
 # Colors for output
 RED='\033[0;31m'
