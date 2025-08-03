@@ -25,12 +25,21 @@ PASSWORD=$(prompt "Enter MySQL root password" "admin123")
 TEMPLATE="local:vztmpl/ubuntu-22.04-standard_*.tar.zst"
 
 # Check if template exists
-if ! pct templates | grep -q "ubuntu-22.04"; then
-    echo "Ubuntu 22.04 template not found. Downloading..."
-    pveam update
-    TEMPLATE_REMOTE=$(pveam available | grep "ubuntu-22.04" | sort -r | head -n1 | awk '{print $1}')
-    pveam download local $TEMPLATE_REMOTE
+STORAGE_NAME="local"  # Change if you store templates elsewhere
+
+echo "Checking for Ubuntu 22.04 template..."
+pveam update
+TEMPLATE_REMOTE=$(pveam available | grep "ubuntu-22.04" | sort -r | head -n1 | awk '{print $1}')
+
+if ! ls /var/lib/vz/template/cache/ | grep -q "$(basename $TEMPLATE_REMOTE)"; then
+    echo "Template not found locally. Downloading to $STORAGE_NAME..."
+    pveam download $STORAGE_NAME $TEMPLATE_REMOTE
+else
+    echo "Ubuntu 22.04 template already available."
 fi
+
+TEMPLATE="$STORAGE_NAME:vztmpl/$(basename $TEMPLATE_REMOTE)"
+
 
 # Create the LXC container
 echo "Creating LXC container..."
